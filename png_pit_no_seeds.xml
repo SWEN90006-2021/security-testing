@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Peach xmlns="http://peachfuzzer.com/2012/Peach" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://peachfuzzer.com/2012/Peach /peach/peach.xsd">
+	<Defaults>
+        <Number signed="false" />
+    </Defaults>
+
+    <DataModel name="Chunk">
+        <Number name="Length" size="32" endian="big">
+            <Relation type="size" of="Data" />
+        </Number>
+        <Block name="TypeData">
+            <String name="Type" value="    " length="4" />        
+            <Blob name="Data" />
+        </Block>
+        <Number size="32" endian="big">
+            <Fixup class="Crc32Fixup">
+                <Param name="ref" value="TypeData"/>
+            </Fixup>
+        </Number>
+    </DataModel>       
+    
+    <DataModel name="Chunk_IHDR" ref="Chunk">
+        <Block name="TypeData">
+            <String name="Type" value="IHDR" length="4" token="true"/>
+            <Block name="Data">
+                <Number name="width" size="32" />
+                <Number name="height" size="32" />
+                <Number name="bits" size="8" />
+                <Number name="color_type" size="8" />
+                <Number name="compression" size="8" />
+                <Number name="filter" size="8" />
+                <Number name="interlace" size="8" />
+            </Block>
+        </Block>        
+    </DataModel>
+
+    <DataModel name="Chunk_IEND" ref="Chunk">
+        <Block name="TypeData">
+            <String name="Type" value="IEND" length="4" token="true" />                        
+            <Blob name="Data" length="0" />
+        </Block>        
+    </DataModel>
+
+    <DataModel name="Chunk_PLTE" ref="Chunk">
+        <Block name="TypeData">
+            <String name="Type" value="PLTE" length="4" token="true" />   
+            <Blob name="Data" />         
+        </Block>        
+    </DataModel>   
+
+    <DataModel name="Chunk_IDAT" ref="Chunk">
+        <Block name="TypeData">
+            <String name="Type" value="IDAT" length="4" token="true" />   
+            <Blob name="Data" />         
+        </Block>        
+    </DataModel>   
+
+    <DataModel name="Chunk_bKGD" ref="Chunk">
+        <Block name="TypeData">
+            <String name="Type" value="bKGD" length="4" token="true" />   
+            <Blob name="Data" />         
+        </Block>        
+    </DataModel> 
+
+    <DataModel name="Chunk_cHRM" ref="Chunk">
+        <Block name="TypeData">
+            <String name="Type" value="cHRM" length="4" token="true" />   
+            <Blob name="Data" />         
+        </Block>        
+    </DataModel>      
+
+    <DataModel name="Chunk_gAMA" ref="Chunk">
+        <Block name="TypeData">
+            <String name="Type" value="gAMA" length="4" token="true" />   
+            <Blob name="Data" />         
+        </Block>        
+    </DataModel>   
+
+    <DataModel name="Chunk_hIST" ref="Chunk">
+        <Block name="TypeData">
+            <String name="Type" value="hIST" length="4" token="true" />   
+            <Blob name="Data" />         
+        </Block>        
+    </DataModel>   
+
+    <DataModel name="Chunk_iCCP" ref="Chunk">
+        <Block name="TypeData">
+            <String name="Type" value="iCCP" length="4" token="true" />   
+            <Blob name="Data" />         
+        </Block>        
+    </DataModel>   
+
+    <DataModel name="Chunk_iTXt" ref="Chunk">
+        <Block name="TypeData">
+            <String name="Type" value="iTXt" length="4" token="true" />   
+            <Blob name="Data" />         
+        </Block>        
+    </DataModel>   
+
+    <DataModel name="Chunk_pHYs" ref="Chunk">
+        <Block name="TypeData">
+            <String name="Type" value="pHYs" length="4" token="true" />   
+            <Blob name="Data" />         
+        </Block>        
+    </DataModel>   
+
+    <DataModel name="Chunk_sBIT" ref="Chunk">
+        <Block name="TypeData">
+            <String name="Type" value="sBIT" length="4" token="true" />   
+            <Blob name="Data" />         
+        </Block>        
+    </DataModel>   
+
+    <DataModel name="Chunk_sPLT" ref="Chunk">
+        <Block name="TypeData">
+            <String name="Type" value="sPLT" length="4" token="true" />   
+            <Blob name="Data" />         
+        </Block>        
+    </DataModel>   
+
+    <DataModel name="Chunk_sRGB" ref="Chunk">
+        <Block name="TypeData">
+            <String name="Type" value="sRGB" length="4" token="true" />   
+            <Blob name="Data" />         
+        </Block>        
+    </DataModel> 
+
+    <DataModel name="Chunk_sTER" ref="Chunk">
+        <Block name="TypeData">
+            <String name="Type" value="sTER" length="4" token="true" />   
+            <Blob name="Data" />         
+        </Block>        
+    </DataModel> 
+
+    <DataModel name="Chunk_tEXt" ref="Chunk">
+        <Block name="TypeData">
+            <String name="Type" value="tEXt" length="4" token="true" />   
+            <Blob name="Data" />         
+        </Block>        
+    </DataModel> 
+
+    <DataModel name="Chunk_tIME" ref="Chunk">
+        <Block name="TypeData">
+            <String name="Type" value="tIME" length="4" token="true" />   
+            <Blob name="Data" />         
+        </Block>        
+    </DataModel> 
+
+    <DataModel name="Chunk_tRNS" ref="Chunk">
+        <Block name="TypeData">
+            <String name="Type" value="tRNS" length="4" token="true" />   
+            <Blob name="Data" />         
+        </Block>        
+    </DataModel> 
+
+    <DataModel name="Chunk_zTXt" ref="Chunk">
+        <Block name="TypeData">
+            <String name="Type" value="zTXt" length="4" token="true" />   
+            <Blob name="Data" />         
+        </Block>        
+    </DataModel> 
+
+    <DataModel name="Png">
+        <Number name="Signature" valueType="hex" value="89504e470d0a1a0a" size="64" token="true" />                
+        <Choice maxOccurs="30000">
+            <Block ref="Chunk_IHDR"/>
+            <Block ref="Chunk_PLTE"/>
+            <Block ref="Chunk_IDAT"/>
+            <Block ref="Chunk_bKGD"/>
+            <Block ref="Chunk_cHRM"/>
+            <Block ref="Chunk_gAMA"/>
+            <Block ref="Chunk_hIST"/>
+            <Block ref="Chunk_iCCP"/>
+            <Block ref="Chunk_iTXt"/>
+            <Block ref="Chunk_pHYs"/>
+            <Block ref="Chunk_sBIT"/>
+            <Block ref="Chunk_sPLT"/>
+            <Block ref="Chunk_sRGB"/>
+            <Block ref="Chunk_sTER"/>
+            <Block ref="Chunk_tEXt"/>
+            <Block ref="Chunk_tIME"/>
+            <Block ref="Chunk_tRNS"/>
+            <Block ref="Chunk_zTXt"/>  
+            <Block ref="Chunk_IEND"/>
+            <Block ref="Chunk"/>                      
+        </Choice>        
+    </DataModel>
+
+    <StateModel name="TheState" initialState="Initial">
+        <State name="Initial">
+            <!-- Generate input from the input model -->
+            <Action type="output">
+                <DataModel ref="Png"/>
+            </Action>
+
+            <Action type="close"/>
+        </State>
+    </StateModel>
+
+    <Test name="Default">
+        <StateModel ref="TheState"/>
+
+        <Publisher class="File">
+            <Param name="FileName" value="fuzz.dat"/>
+        </Publisher>
+
+        <Logger class="Filesystem">
+            <Param name="Path" value="logs" />
+        </Logger>
+    </Test>
+</Peach>
+<!-- end -->
