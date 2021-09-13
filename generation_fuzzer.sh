@@ -26,7 +26,7 @@ do
     echo "A segmentation fault has been detected!"
     #Save reproducible input for debugging and fixing
     FAULT_DETECTED=$((FAULT_DETECTED + 1))
-    cp fuzz.dat > $OUTDIR/fault${FAULT_DETECTED}.txt
+    cp fuzz.dat $OUTDIR/fault${FAULT_DETECTED}.dat
   fi
 done
 
