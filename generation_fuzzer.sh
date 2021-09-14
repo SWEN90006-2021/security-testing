@@ -21,9 +21,9 @@ do
 
   #Detect faults (e.g., segmentation fault)
   res=$? #get the exit code
-  if [ $res -eq 139 ] #139: segmentation fault
+  if [[ $res -eq 139 || $res -eq 134 ]] #139: SEGFAULT, 134: SIGABORT
   then
-    echo "A segmentation fault has been detected!"
+    echo "A fault has been detected!"
     #Save reproducible input for debugging and fixing
     FAULT_DETECTED=$((FAULT_DETECTED + 1))
     cp fuzz.dat $OUTDIR/fault${FAULT_DETECTED}.dat
