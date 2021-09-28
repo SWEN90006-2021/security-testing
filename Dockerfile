@@ -59,6 +59,9 @@ COPY --chown=ubuntu:ubuntu generation_fuzzer.sh $WORKDIR/generation_fuzzer.sh
 COPY --chown=ubuntu:ubuntu png_pit_no_seeds.xml $WORKDIR/png_pit_no_seeds.xml
 COPY --chown=ubuntu:ubuntu png_pit.xml $WORKDIR/png_pit.xml
 COPY --chown=ubuntu:ubuntu wscript_build $WORKDIR/wscript_build
+COPY --chown=ubuntu:ubuntu boom_pit.xml $WORKDIR/boom_pit.xml
+COPY --chown=ubuntu:ubuntu read_and_process_v1.c $WORKDIR/read_and_process_v1.c
+COPY --chown=ubuntu:ubuntu read_and_process_v2.c $WORKDIR/read_and_process_v2.c
 
 # Install other software packages from source (e.g., radamsa fuzzer)
 RUN cd $WORKDIR && \

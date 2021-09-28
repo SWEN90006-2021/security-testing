@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Peach xmlns="http://peachfuzzer.com/2012/Peach" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://peachfuzzer.com/2012/Peach /peach/peach.xsd">
+	<Defaults>
+        <Number signed="false" />
+    </Defaults>
+
+    <DataModel name="Chunk">
+        <String name="Type" value="    " length="4" /> 
+        <Number name="Length" size="32" endian="little">
+            <Relation type="size" of="Data" />
+        </Number>
+        <Blob name="Data" />
+    </DataModel>       
+    
+    <DataModel name="Chunk_BOOM" ref="Chunk">
+        <String name="Type" value="BOOM" length="4" token="true" />   
+    </DataModel> 
+
+    <DataModel name="ABCD">
+        <String name="Signature" value="ABCD" length="4" token="true"/>
+        <Choice maxOccurs="100">
+            <Block ref="Chunk_BOOM"/>
+            <Block ref="Chunk"/>                      
+        </Choice>        
+    </DataModel>
+
+    <StateModel name="TheState" initialState="Initial">
+        <State name="Initial">
+            <!-- Take seed inputs and mutate them -->
+            <Action type="output">
+                <DataModel ref="ABCD"/>
+                <Data fileName="in/*"/>
+            </Action>
+
+            <Action type="close"/>
+        </State>
+    </StateModel>
+
+    <Test name="Default">
+        <StateModel ref="TheState"/>
+
+        <Publisher class="File">
+            <Param name="FileName" value="fuzz.dat"/>
+        </Publisher>
+
+        <Logger class="Filesystem">
+            <Param name="Path" value="logs" />
+        </Logger>
+    </Test>
+</Peach>
+<!-- end -->
