@@ -22,7 +22,7 @@ docker build . -t swen90006 --no-cache
 # comment out this line
 FROM ubuntu:20.04
 # Use the below line
-FROM --platform=linux/arm64 ubuntu:20.04 
+FROM --platform=linux/amd64 ubuntu:20.04 
 ```
 
 
