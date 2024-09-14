@@ -1,16 +1,22 @@
-FROM ubuntu:16.04
+FROM ubuntu:20.04
+
+# On Mac M1, M2 and M3 chip, Please uncomment the below line. And comment the above line
+#FROM --platform=linux/amd64 ubuntu:20.04
+
+# Set environment variables
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Install common dependencies
-RUN apt-get -y update && \
-    apt-get -y install sudo \ 
-    apt-utils \
+RUN apt-get update -y && \
+    apt-get install -y --no-install-recommends \
+    sudo \
     build-essential \
     openssl \
-    clang \
+    clang \    
     graphviz-dev \
     git \
     libgnutls28-dev \
-    python-pip \
+    python2 \
     nano \
     net-tools \
     vim \
@@ -19,18 +25,32 @@ RUN apt-get -y update && \
     automake \
     libtool \
     libc6-dev-i386 \
-    python-pip \
     g++-multilib \
-    mono-complete \
-    unzip
+    unzip \
+    tzdata \
+    llvm \
+    llvm-dev \
+    gnupg \
+    zlib1g-dev \
+    ca-certificates && \
+    ln -s /usr/bin/python2.7 /usr/bin/python
 
-# Install Peach Fuzzer-specific dependencies 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install tzdata
 
-RUN add-apt-repository ppa:ubuntu-toolchain-r/test && \
-    apt-get -y update && \
-    apt-get -y install gcc-4.4 && \
-    apt-get -y install g++-4.4
+# Install Mono from the official Mono Project repository
+RUN wget https://download.mono-project.com/repo/xamarin.gpg && \
+    apt-key add xamarin.gpg && \
+    echo "deb https://download.mono-project.com/repo/ubuntu stable-focal main" | tee /etc/apt/sources.list.d/mono-official-stable.list && \
+    rm xamarin.gpg && \
+    apt-get update -y && \
+    apt-get install -y mono-complete
+
+# Install downgraded version of gcc and g++ to 4.4, to install peach
+RUN echo 'deb http://dk.archive.ubuntu.com/ubuntu/ trusty main' >> \
+    /etc/apt/sources.list && \
+echo 'deb http://dk.archive.ubuntu.com/ubuntu/ trusty universe' >> \
+    /etc/apt/sources.list && \
+apt-get update 
+RUN apt-get install -y gcc-4.4 g++-4.4
 
 # Add a new user ubuntu, pass: ubuntu
 RUN groupadd ubuntu && \
@@ -45,11 +65,13 @@ ENV WORKDIR="/home/ubuntu"
 ENV AFL="${WORKDIR}/AFL"
 ENV AFL_PATH="${WORKDIR}/AFL"
 ENV PATH="${PATH}:${WORKDIR}:${AFL}:${WORKDIR}/peach-3.0.202-source/output/linux_x86_64_release/bin"
+ENV MONO_ENV_OPTIONS="--interpreter"
 
 # The following environment variables are set to make AFL work inside a Docker container
 ENV AFL_I_DONT_CARE_ABOUT_MISSING_CRASHES=1 \
     AFL_SKIP_CPUFREQ=1 \
-    AFL_NO_AFFINITY=1
+    AFL_NO_AFFINITY=1 \
+    AFL_NO_X86=1
 
 # Copy file from the host folder where Dockerfile is stored
 COPY --chown=ubuntu:ubuntu check_pin.c $WORKDIR/check_pin.c
@@ -73,7 +95,7 @@ RUN cd $WORKDIR && \
 
 # Install Peach generation-based fuzzer
 RUN cd $WORKDIR && \
-    wget https://sourceforge.net/projects/peachfuzz/files/Peach/3.0/peach-3.0.202-source.zip && \
+    wget https://storage.googleapis.com/fuzzbench-files/peach-3.0.202-source.zip &&\
     unzip peach-3.0.202-source.zip && \
     cp wscript_build peach-3.0.202-source/Peach.Core.Analysis.Pin.BasicBlocks/ && \
     cd peach-3.0.202-source && \
@@ -85,4 +107,4 @@ RUN cd $WORKDIR && \
     git clone https://github.com/google/AFL.git && \
     cd AFL && \
     make clean all && \
-    cd llvm_mode; LLVM_CONFIG=llvm-config-3.8 make
+    cd llvm_mode; LLVM_CONFIG=llvm-config-10 make

@@ -10,10 +10,21 @@ Please follow [this instruction](https://docs.docker.com/get-docker/) to install
 
 ## Build a Docker image
 
-First, we need to build a Docker image using the given Dockerfile. The Docker image has everything ready for our experiments. Once we make changes to the Dockerfile, we would need to rerun this command.
+
+We need to build a Docker image using the given Dockerfile. The Docker image has everything ready for our experiments. Once we make changes to the Dockerfile, we would need to rerun this command.
 ```bash
 docker build . -t swen90006 --no-cache
 ```
+
+**For Mac M1, M2 and M3 users**, before you run the above command, please edit the Dockerfile. On the first line of the Dockerfile: 
+
+```bash
+# comment out this line
+FROM ubuntu:20.04
+# Use the below line
+FROM --platform=linux/arm64 ubuntu:20.04 
+```
+
 
 If the build is successful, we should have a new Docker image named swen90006. To see all Docker images on our computer, we can run the following command.
 ```bash
