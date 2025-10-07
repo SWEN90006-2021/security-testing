@@ -133,9 +133,11 @@ docker run --rm -ti --ulimit='stack=-1:-1' klee/klee:3.0
 After running this, we should see a prompt for KLEE like `klee@451c4bee278a` in which `451c4bee278a` is the ID to access the running Docker container. This ID is used in the following step.
 
 ### Copy necessary files to the KLEE docker
+Make sure you use your correct container ID, which is changing over time
 ```bash
 docker cp klee_swap.c 451c4bee278a:/home/klee/
 docker cp klee_get_sign.c 451c4bee278a:/home/klee/
+docker cp klee_pointer.c 451c4bee278a:/home/klee/
 docker cp klee_maze.c 451c4bee278a:/home/klee/
 ```
 ### Symbolically running simple functions with KLEE
@@ -143,11 +145,13 @@ First we compile the programs which wrap the functions under analysis to LLVM bi
 ```bash
 clang -emit-llvm -c klee_swap.c
 clang -emit-llvm -c klee_get_sign.c
+clang -emit-llvm -c klee_pointer.c
 ```
 And now we can run KLEE to symbolically execute these programs
 ```bash
 klee klee_swap.bc
 klee klee_get_sign.bc
+klee klee_pointer.bc
 ```
 All test cases and other outputs should be stored in the klee-last folder.
 
