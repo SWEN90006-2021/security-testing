@@ -122,3 +122,44 @@ cd $WORKDIR
 afl-fuzz -i in -o out -- libpng-afl/pngimage @@
 ```
 
+## Week 10: Symbolic Execution
+
+Please note that in this experiment, we are using a separate Docker for KLEE instead of the default swen90006 one. To set it up, please run the following commands. Detailed instructions are copied from [KLEE webpage](https://klee-se.org/docker/).
+
+```bash
+docker pull klee/klee:3.0
+docker run --rm -ti --ulimit='stack=-1:-1' klee/klee:3.0
+```
+After running this, we should see a prompt for KLEE like `klee@451c4bee278a` in which `451c4bee278a` is the ID to access the running Docker container. This ID is used in the following step.
+
+### Copy necessary files to the KLEE docker
+```bash
+docker klee_swap.c cp 451c4bee278a:/home/klee/
+docker klee_get_sign.c cp 451c4bee278a:/home/klee/
+docker klee_maze.c cp 451c4bee278a:/home/klee/
+```
+### Symbolically running simple functions with KLEE
+First we compile the programs which wrap the functions under analysis to LLVM bitcode.
+```bash
+clang -emit-llvm -c klee_swap.c
+clang -emit-llvm -c klee_get_sign.c
+```
+And now we can run KLEE to symbolically execute these programs
+```bash
+klee klee_swap.bc
+klee klee_get_sign.bc
+```
+All test cases and other outputs should be stored in the klee-last folder.
+
+### Symbolically solve a maze with KLEE
+We follow similar steps above to compile and run a maze program. This experiment is based on [this example](https://feliam.wordpress.com/2010/10/07/the-symbolic-maze/).
+
+Compile the maze code to produce LLVM bitcode
+```bash
+clang -emit-llvm -c klee_maze.c
+```
+
+Then run KLEE to solve the maze and get the solutions automatically :)
+```bash
+klee --emit-all-errors klee_maze.bc
+```
