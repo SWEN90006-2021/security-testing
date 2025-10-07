@@ -165,12 +165,6 @@ klee --emit-all-errors klee_maze.bc
 ```
 
 ### Using Z3 solver
-Install Z3 and required packages
-```bash
-sudo apt-get install pip
-pip install z3-solver
-```
-
 Run the example of solving shopping constraints with Z3 solver
 ```bash
 python3 z3_demo.py

@@ -32,6 +32,7 @@ RUN apt-get update -y && \
     llvm-dev \
     gnupg \
     zlib1g-dev \
+    pip \
     ca-certificates && \
     ln -s /usr/bin/python2.7 /usr/bin/python
 
@@ -51,6 +52,9 @@ echo 'deb http://dk.archive.ubuntu.com/ubuntu/ trusty universe' >> \
     /etc/apt/sources.list && \
 apt-get update 
 RUN apt-get install -y gcc-4.4 g++-4.4
+
+# Install Z3 solver
+RUN pip install z3-solver
 
 # Add a new user ubuntu, pass: ubuntu
 RUN groupadd ubuntu && \
