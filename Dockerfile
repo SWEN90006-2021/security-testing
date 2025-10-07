@@ -85,6 +85,7 @@ COPY --chown=ubuntu:ubuntu boom_pit.xml $WORKDIR/boom_pit.xml
 COPY --chown=ubuntu:ubuntu read_and_process_v1.c $WORKDIR/read_and_process_v1.c
 COPY --chown=ubuntu:ubuntu read_and_process_v2.c $WORKDIR/read_and_process_v2.c
 COPY --chown=ubuntu:ubuntu good_bad_fuzz.c $WORKDIR/good_bad_fuzz.c
+COPY --chown=ubuntu:ubuntu z3_demo.c $WORKDIR/z3_demo.py
 
 # Install other software packages from source (e.g., radamsa fuzzer)
 RUN cd $WORKDIR && \
