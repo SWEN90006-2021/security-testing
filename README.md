@@ -134,9 +134,9 @@ After running this, we should see a prompt for KLEE like `klee@451c4bee278a` in 
 
 ### Copy necessary files to the KLEE docker
 ```bash
-docker klee_swap.c cp 451c4bee278a:/home/klee/
-docker klee_get_sign.c cp 451c4bee278a:/home/klee/
-docker klee_maze.c cp 451c4bee278a:/home/klee/
+docker cp klee_swap.c 451c4bee278a:/home/klee/
+docker cp klee_get_sign.c 451c4bee278a:/home/klee/
+docker cp klee_maze.c 451c4bee278a:/home/klee/
 ```
 ### Symbolically running simple functions with KLEE
 First we compile the programs which wrap the functions under analysis to LLVM bitcode.
