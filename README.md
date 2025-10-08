@@ -139,6 +139,7 @@ docker cp klee_swap.c 451c4bee278a:/home/klee/
 docker cp klee_get_sign.c 451c4bee278a:/home/klee/
 docker cp klee_pointer.c 451c4bee278a:/home/klee/
 docker cp klee_maze.c 451c4bee278a:/home/klee/
+docker cp kee_loops.c 451c4bee278a:/home/klee/
 ```
 ### Symbolically running simple functions with KLEE
 First we compile the programs which wrap the functions under analysis to LLVM bitcode.
@@ -146,12 +147,14 @@ First we compile the programs which wrap the functions under analysis to LLVM bi
 clang -emit-llvm -c klee_swap.c
 clang -emit-llvm -c klee_get_sign.c
 clang -emit-llvm -c klee_pointer.c
+clang -emit-llvm -c klee_loops.c
 ```
 And now we can run KLEE to symbolically execute these programs
 ```bash
 klee klee_swap.bc
 klee klee_get_sign.bc
 klee klee_pointer.bc
+klee klee_loops.bc
 ```
 All test cases and other outputs should be stored in the klee-last folder.
 
