@@ -171,9 +171,48 @@ Then run KLEE to solve the maze and get the solutions automatically :)
 klee --emit-all-errors klee_maze.bc
 ```
 
-### Using Z3 solver
-Run the example of solving shopping constraints with Z3 solver
+## Week 11: Hybrid Fuzzing
+
+Please note that in this experiment, we are using a separate Docker for SymCC instead of the default swen90006 one. To set it up, please run the following commands. Detailed instructions are copied from [SymCC GitHub](https://github.com/eurecom-s3/symcc). SymCC supports concolic execution.
+
 ```bash
-python3 z3_demo.py
+docker pull eurecoms3/symcc
+docker run -it --rm symcc
 ```
+After running this, we should see a prompt for SymCC like `ubuntu@29575b6fe1e3` in which `29575b6fe1e3` is the ID to access the running Docker container. This ID is used in the following step.
+
+In the current docker containter provided by the SymCC team, it seems that there are some issues, leading to missing clang and llvm which are required by SymCC. The following commands would fix that.
+
+```bash
+sudo apt-get update
+sudo apt-get install -y llvm-12 clang-12
+```
+
+### Copy necessary files to the SymCC docker
+Make sure you use your correct container ID, which is changing over time
+```bash
+docker cp good_bad_symcc.c 29575b6fe1e3:/home/ubuntu/
+docker cp crc32.h 29575b6fe1e3:/home/ubuntu/
+docker cp crc32.c 29575b6fe1e3:/home/ubuntu/
+docker cp crc32_demo.c 29575b6fe1e3:/home/ubuntu/
+```
+
+### Example 1: Run the good_bad simple program with SymCC
+The following commands will first compile the program under test with SymCC-instrumentation to enable its concolic execution, then create a seed input, and run concolic execution.
+```bash
+symcc -o good_bad_symcc good_bad_symcc.c
+printf "good" > seed1
+SYMCC_INPUT_FILE=seed1 ./good_bad_symcc seed1
+```
+After running this, SymCC produces new test cases and store them in the /tmp/output folder.
+
+### Example 2: Run a demo for CRC32 function implemented by a static library
+```bash
+gcc -c crc32.c -o crc32.o
+ar rcs libcrc32.a crc32.o
+symcc crc32_demo.c -L. -lcrc32 -o crc32_demo
+printf '%b' "\x85\x11\x4A\x0Dhello world" > seed2
+SYMCC_INPUT_FILE=seed2 ./crc32_demo seed2
+```
+In this example, SymCC successfully generates test cases without the access to the code of the crc32 "library".
 
