@@ -181,11 +181,12 @@ docker run -it --rm symcc
 ```
 After running this, we should see a prompt for SymCC like `ubuntu@29575b6fe1e3` in which `29575b6fe1e3` is the ID to access the running Docker container. This ID is used in the following step.
 
-In the current docker containter provided by the SymCC team, it seems that there are some issues, leading to missing clang and llvm which are required by SymCC. The following commands would fix that.
+In the current docker containter provided by the SymCC team, it seems that there are some issues, leading to missing clang and llvm which are required by SymCC. The following commands would fix that. We also install two programs nano and xxd to help explain the results later.
 
 ```bash
 sudo apt-get update
 sudo apt-get install -y llvm-12 clang-12
+sudo apt-get install -y nano xxd
 ```
 
 ### Copy necessary files to the SymCC docker
@@ -211,7 +212,7 @@ After running this, SymCC produces new test cases and store them in the /tmp/out
 gcc -c crc32.c -o crc32.o
 ar rcs libcrc32.a crc32.o
 symcc crc32_demo.c -L. -lcrc32 -o crc32_demo
-printf '%b' "\x85\x11\x4A\x0Dhello world" > seed2
+printf '%b' "\x85\x11\x4A\x0DSWEN90006" > seed2
 SYMCC_INPUT_FILE=seed2 ./crc32_demo seed2
 ```
 In this example, SymCC successfully generates test cases without the access to the code of the crc32 "library".
